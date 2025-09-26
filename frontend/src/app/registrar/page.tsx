@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegisterRequest, RegisterResponse } from "@/models/auth";
+import { registerUser } from "@/services/authServices";
+import { toast} from "sonner";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -21,19 +23,10 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:3000/usuarios/cadastro", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ usuario: form }),
-      });
-
-      if (!res.ok) throw new Error("Erro ao registrar");
-
-      const data: RegisterResponse = await res.json();
-
-      console.log("Usuário registrado:", data);
+      const data = registerUser(form);
 
       // redireciona para login
+      toast.success("Usuário cadastrado com sucesso!")
       router.push("/login");
     } catch (err: any) {
       setError(err.message);

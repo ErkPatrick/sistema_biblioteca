@@ -1,17 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoginRequest, LoginResponse } from "@/models/auth";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
+import { toast } from "sonner";
+import { loginUser } from "@/services/authServices";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
 
   const [form, setForm] = useState<LoginRequest>({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  //limpo o contexto de login ao entrar nessa parte
+  useEffect(() => {
+    logout()
+  }, [])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -19,26 +27,18 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:3000/usuarios/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ usuario: form }),
-      });
-
-      if (!res.ok) throw new Error("Credenciais inválidas");
-
-      const data: LoginResponse = await res.json();
+      const data = await loginUser(form);
 
       // Salvar no contexto
       login(data.usuario, data.token);
 
-      // Redirecionar para o dashboard certo mediante a role do usuário
-      if (data.usuario.role === "bibliotecario") {
-        router.push("/dashboard-bibliotecario");
-      } else if (data.usuario.role === "admin") {
-        router.push("/dashboard-admin");
-      } else {
-        alert("Erro: tipo de usuário não identificado");
+      if (data.usuario.senha_provisoria === true) {
+        router.push("/login/trocar-senha-provisoria");
+      }
+      else {
+        toast.success(`${data.usuario.nome}, bem-vindo ao sistema!`)
+
+        router.push("/home");
       }
     } catch (err: any) {
       setError(err.message);
@@ -82,6 +82,8 @@ export default function LoginPage() {
         </button>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
+
+        <Link className="flex justify-center text-blue-500 hover:underline" href={"/registrar"}>Não tem uma conta?</Link>
       </form>
     </div>
   );

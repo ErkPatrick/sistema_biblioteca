@@ -10,7 +10,6 @@ class Usuarios::SessionsController < Devise::SessionsController
     if resource.senha_provisoria?
       render json: { 
         message: 'Troque sua senha provisória', 
-        senha_provisoria: true, 
         usuario: resource,
         token: token
       }, status: :ok

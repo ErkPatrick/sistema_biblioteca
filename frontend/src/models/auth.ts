@@ -5,7 +5,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   message: string;
-  usuario: Usuario;
+  usuario: Usuario;  //posso acessar o senha_provisoria pelo usuario
   token: string;
 }
 
@@ -17,6 +17,16 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
+  message: string;
+  usuario: Usuario;
+}
+
+export interface UpdatePasswordRequest {
+  password: string;
+  password_confirmation: string;
+}
+
+export interface UpdatePasswordResponse {
   message: string;
   usuario: Usuario;
 }
