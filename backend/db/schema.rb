@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_22_232919) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_27_165506) do
   create_table "categorias", force: :cascade do |t|
     t.string "nome", null: false
     t.datetime "created_at", null: false
@@ -32,6 +32,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_232919) do
     t.index ["leitor_id"], name: "index_emprestimos_on_leitor_id"
     t.index ["livro_id"], name: "index_emprestimos_on_livro_id"
     t.index ["usuario_id"], name: "index_emprestimos_on_usuario_id"
+  end
+
+  create_table "enderecos", force: :cascade do |t|
+    t.integer "leitor_id", null: false
+    t.string "rua"
+    t.string "numero"
+    t.string "cidade"
+    t.string "estado"
+    t.string "cep"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["leitor_id"], name: "index_enderecos_on_leitor_id"
   end
 
   create_table "leitores", force: :cascade do |t|
@@ -76,5 +88,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_232919) do
   add_foreign_key "emprestimos", "leitores"
   add_foreign_key "emprestimos", "livros"
   add_foreign_key "emprestimos", "usuarios"
+  add_foreign_key "enderecos", "leitores"
   add_foreign_key "livros", "categorias"
 end

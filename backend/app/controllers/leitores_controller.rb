@@ -1,41 +1,53 @@
 class LeitoresController < ApplicationController
+  before_action :set_leitor, only: [:show, :update, :destroy]
+
   def index
-    leitores = Leitor.all
-    render json: leitores
+    leitores = Leitor.includes(:endereco).all
+    render json: leitores.as_json(include: :endereco)
   end
 
   def show
-    leitor = Leitor.find(params[:id])
-    render json: leitor
+    render json: @leitor.as_json(include: :endereco)
   end
 
   def create
     leitor = Leitor.new(leitor_params)
+
     if leitor.save
-      render json: leitor, status: :created
+      LeitorMailer.senha_emprestimo_email(leitor).deliver_now
+      render json: leitor.as_json(include: :endereco), status: :created
     else
-      render json: leitor.errors, status: :unprocessable_entity
+      render json: { errors: leitor.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
+
   def update
-    leitor = Leitor.find(params[:id])
-    if leitor.update(leitor_params)
-      render json: leitor
+    if @leitor.update(leitor_params)
+      render json: @leitor.as_json(include: :endereco)
     else
-      render json: leitor.errors, status: :unprocessable_entity
+      render json: { errors: @leitor.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    leitor = Leitor.find(params[:id])
-    leitor.destroy
+    @leitor.destroy
     head :no_content
   end
 
   private
 
+  def set_leitor
+    @leitor = Leitor.find(params[:id])
+  end
+
   def leitor_params
-    params.require(:leitor).permit(:nome_completo, :cpf, :email, :telefone, :senha_emprestimo)
+    params.require(:leitor).permit(
+      :nome_completo,
+      :cpf,
+      :email,
+      :telefone,
+      endereco_attributes: [:rua, :numero, :cidade, :estado, :cep]
+    )
   end
 end

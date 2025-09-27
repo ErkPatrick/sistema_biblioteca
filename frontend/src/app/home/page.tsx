@@ -4,8 +4,8 @@ import { useState } from "react";
 import Sidebar from "@/components/ui/SideBar";
 import Livros from "@/components/bibliotecario/Livros/Livros";
 import Categorias from "@/components/bibliotecario/Categorias/Categorias";
+import Leitores from "@/components/bibliotecario/Leitores/Leitores";
 // import Emprestimos from "@/components/bibliotecario/Emprestimos";
-// import Leitores from "@/components/bibliotecario/Leitores";
 // import MinhasInfos from "@/components/bibliotecario/MinhasInfos";
 
 export default function HomeBibliotecario() {
@@ -14,13 +14,13 @@ export default function HomeBibliotecario() {
     const renderComponent = () => {
         switch (activeComponent) {
             case "livros":
-                return <Livros/>;
+                return <Livros />;
             case "categorias":
-                return <Categorias/>;
+                return <Categorias />;
             case "emprestimos":
                 return <div>Componente Empréstimos</div>;
             case "leitores":
-                return <div>Componente Leitores</div>;
+                return <Leitores />;
             case "minhasInfos":
                 return <div>Componente Minhas Informações</div>;
             default:

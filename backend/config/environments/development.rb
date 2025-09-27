@@ -30,19 +30,21 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Configuração do Action Mailer para envio de emails
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :smtp
-
   config.action_mailer.smtp_settings = {
-    address:              'smtp.office365.com',
-    port:                 587,
-    domain:               'outlook.com',
-    user_name:            'erick-patrickfreitas@outlook.com',
-    password:             'qgndvstevaitdzbj',                  
-    authentication:       :login,
+    address: "smtp.office365.com",
+    port: 587,
+    domain: "outlook.com",
+    user_name: ENV["OUTLOOK_EMAIL"],
+    password: ENV["OUTLOOK_PASSWORD"],
+    authentication: "login",
     enable_starttls_auto: true
+    open_timeout: 30,
+    read_timeout: 30
   }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+
 
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }

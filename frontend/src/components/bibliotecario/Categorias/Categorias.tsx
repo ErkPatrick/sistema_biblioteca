@@ -7,23 +7,20 @@ import FormCategoria from "./FormCategoria";
 import { toast } from "sonner";
 import ConfirmModal from "../../ConfirmModal";
 
-interface ConfirmModalProps {
-    message: string;
-    onConfirm: () => void;
-    onCancel: () => void;
-}
-
 export default function Categorias() {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
+    const [filteredCategorias, setFilteredCategorias] = useState<Categoria[]>([]);
     const [selectedCategoria, setSelectedCategoria] = useState<Categoria | null>(null);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [categoriaToDelete, setCategoriaToDelete] = useState<Categoria | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     const loadCategorias = async () => {
         try {
             const data = await getCategorias();
             setCategorias(data);
+            setFilteredCategorias(data);
         } catch (err: any) {
             toast.error(err.message || "Erro ao carregar categorias");
         }
@@ -33,17 +30,23 @@ export default function Categorias() {
         loadCategorias();
     }, []);
 
+    // Filtra categorias conforme o termo de busca
+    useEffect(() => {
+        const term = searchTerm.toLowerCase();
+        setFilteredCategorias(
+            categorias.filter((cat) => cat.nome.toLowerCase().includes(term))
+        );
+    }, [searchTerm, categorias]);
+
     const handleSaveCategoria = async (nome: string, id?: number) => {
         try {
-            let data;
             if (id) {
-                data = await updateCategoria(id, { nome });
+                await updateCategoria(id, { nome });
                 toast.success("Categoria atualizada com sucesso!");
             } else {
-                data = await createCategoria({ nome });
+                await createCategoria({ nome });
                 toast.success("Categoria criada com sucesso!");
             }
-
             setIsFormModalOpen(false);
             setSelectedCategoria(null);
             loadCategorias();
@@ -54,7 +57,6 @@ export default function Categorias() {
 
     const handleDeleteCategoria = async () => {
         if (!categoriaToDelete) return;
-
         try {
             await deleteCategoria(categoriaToDelete.id);
             toast.success("Categoria deletada com sucesso!");
@@ -69,6 +71,16 @@ export default function Categorias() {
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">Categorias</h1>
+
+            {/* Campo de busca */}
+            <input
+                type="text"
+                placeholder="Buscar categoria..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="mb-4 p-2 border border-gray-300 rounded w-full"
+            />
+
             <button
                 onClick={() => setIsFormModalOpen(true)}
                 className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -76,18 +88,18 @@ export default function Categorias() {
                 Adicionar Categoria
             </button>
 
-            <table className="w-full border">
+            <table className="w-full border border-gray-300 border-collapse">
                 <thead>
                     <tr className="bg-gray-200">
-                        <th className="p-2 border">Nome</th>
-                        <th className="p-2 border">Ações</th>
+                        <th className="p-2 border border-gray-300 w-3/4">Nome</th>
+                        <th className="p-2 border border-gray-300">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {categorias.map((cat) => (
-                        <tr key={cat.id} className="border-b">
-                            <td className="p-2">{cat.nome}</td>
-                            <td className="p-2 flex gap-2">
+                    {filteredCategorias.map((cat) => (
+                        <tr key={cat.id} className="border-b border-gray-300 text-center">
+                            <td className="p-2 border border-gray-300">{cat.nome}</td>
+                            <td className="p-2 border border-gray-300 flex justify-center gap-2">
                                 <button
                                     onClick={() => { setSelectedCategoria(cat); setIsFormModalOpen(true); }}
                                     className="px-2 py-1 bg-yellow-400 rounded"
@@ -103,6 +115,13 @@ export default function Categorias() {
                             </td>
                         </tr>
                     ))}
+                    {filteredCategorias.length === 0 && (
+                        <tr>
+                            <td colSpan={2} className="p-4 text-center text-gray-500">
+                                Nenhuma categoria encontrada.
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
 
