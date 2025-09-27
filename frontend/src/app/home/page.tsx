@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Sidebar from "@/components/ui/SideBar";
 import Livros from "@/components/bibliotecario/Livros/Livros";
-// import Categorias from "@/components/bibliotecario/Categorias";
+import Categorias from "@/components/bibliotecario/Categorias/Categorias";
 // import Emprestimos from "@/components/bibliotecario/Emprestimos";
 // import Leitores from "@/components/bibliotecario/Leitores";
 // import MinhasInfos from "@/components/bibliotecario/MinhasInfos";
@@ -16,7 +16,7 @@ export default function HomeBibliotecario() {
             case "livros":
                 return <Livros/>;
             case "categorias":
-                return <div>Componente Categorias</div>;
+                return <Categorias/>;
             case "emprestimos":
                 return <div>Componente Empréstimos</div>;
             case "leitores":

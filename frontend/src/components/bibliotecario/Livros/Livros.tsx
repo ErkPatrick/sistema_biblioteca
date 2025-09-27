@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Livro } from "@/models/livro";
-import { getLivros, deleteLivro } from "@/services/livrosService";
+import { getLivros, deleteLivro } from "@/services/livroService";
 import FormLivro from "./FormLivro";
 import { toast } from "sonner";
 
