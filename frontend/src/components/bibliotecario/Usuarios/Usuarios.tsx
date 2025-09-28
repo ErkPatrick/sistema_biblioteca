@@ -7,7 +7,7 @@ import FormUsuario from "./FormUsuario";
 import { toast } from "sonner";
 import ConfirmModal from "../../ConfirmModal";
 
-export default function Usuarios() {
+export default function UsuariosPage() {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [filteredUsuarios, setFilteredUsuarios] = useState<Usuario[]>([]);
     const [selectedUsuario, setSelectedUsuario] = useState<Usuario | null>(null);

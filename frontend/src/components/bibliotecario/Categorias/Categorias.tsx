@@ -7,7 +7,7 @@ import FormCategoria from "./FormCategoria";
 import { toast } from "sonner";
 import ConfirmModal from "../../ConfirmModal";
 
-export default function Categorias() {
+export default function CategoriasPage() {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [filteredCategorias, setFilteredCategorias] = useState<Categoria[]>([]);
     const [selectedCategoria, setSelectedCategoria] = useState<Categoria | null>(null);

@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Sidebar from "@/components/ui/SideBar";
-import Livros from "@/components/bibliotecario/Livros/Livros";
-import Categorias from "@/components/bibliotecario/Categorias/Categorias";
-import Leitores from "@/components/bibliotecario/Leitores/Leitores";
-import Usuarios from "@/components/bibliotecario/Usuarios/Usuarios";
+import EmprestimosPage from "@/components/bibliotecario/Emprestimos/Emprestimos";
+import LivrosPage from "@/components/bibliotecario/Livros/Livros";
+import CategoriasPage from "@/components/bibliotecario/Categorias/Categorias";
+import LeitoresPage from "@/components/bibliotecario/Leitores/Leitores";
+import UsuariosPage from "@/components/bibliotecario/Usuarios/Usuarios";
 
 export default function HomeBibliotecario() {
     const [activeComponent, setActiveComponent] = useState("livros");
@@ -13,15 +14,15 @@ export default function HomeBibliotecario() {
     const renderComponent = () => {
         switch (activeComponent) {
             case "livros":
-                return <Livros />;
+                return <LivrosPage />;
             case "categorias":
-                return <Categorias />;
+                return <CategoriasPage />;
             case "emprestimos":
-                return <div>Componente Empréstimos</div>;
+                return <EmprestimosPage/>
             case "leitores":
-                return <Leitores />;
+                return <LeitoresPage />;
             case "bibliotecarios":
-                return <Usuarios />
+                return <UsuariosPage />
         }
     };
 

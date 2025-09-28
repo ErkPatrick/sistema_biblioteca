@@ -7,7 +7,7 @@ import FormLeitor from "./FormLeitor";
 import { toast } from "sonner";
 import ConfirmModal from "../../ConfirmModal";
 
-export default function Leitores() {
+export default function LeitoresPage() {
   const [leitores, setLeitores] = useState<Leitor[]>([]);
   const [selectedLeitor, setSelectedLeitor] = useState<Leitor | null>(null);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);

@@ -6,10 +6,11 @@ import { Categoria } from "@/models/categoria";
 import { getLivros, createLivro, updateLivro, deleteLivro } from "@/services/livroService";
 import { getCategorias } from "@/services/categoriaService";
 import FormLivro from "./FormLivro";
+import FormEmprestimo from "./FormEmprestimo";
 import { toast } from "sonner";
 import ConfirmModal from "../../ConfirmModal";
 
-export default function Livros() {
+export default function LivrosPage() {
     const [livros, setLivros] = useState<Livro[]>([]);
     const [filteredLivros, setFilteredLivros] = useState<Livro[]>([]);
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -17,8 +18,9 @@ export default function Livros() {
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [livroToDelete, setLivroToDelete] = useState<Livro | null>(null);
+    const [isEmprestimoModalOpen, setIsEmprestimoModalOpen] = useState(false);
 
-    // Estados de filtro/busca
+    // Filtros
     const [searchTitulo, setSearchTitulo] = useState("");
     const [searchAutor, setSearchAutor] = useState("");
     const [filterCategoria, setFilterCategoria] = useState<number | "">("");
@@ -39,23 +41,12 @@ export default function Livros() {
         loadData();
     }, []);
 
-    // Aplica filtros sempre que algum filtro mudar
     useEffect(() => {
         let temp = [...livros];
-
-        if (searchTitulo) {
-            temp = temp.filter((l) => l.titulo.toLowerCase().includes(searchTitulo.toLowerCase()));
-        }
-        if (searchAutor) {
-            temp = temp.filter((l) => l.autor.toLowerCase().includes(searchAutor.toLowerCase()));
-        }
-        if (filterCategoria) {
-            temp = temp.filter((l) => l.categoria_id === filterCategoria);
-        }
-        if (filterStatus) {
-            temp = temp.filter((l) => l.status.toLowerCase() === filterStatus.toLowerCase());
-        }
-
+        if (searchTitulo) temp = temp.filter(l => l.titulo.toLowerCase().includes(searchTitulo.toLowerCase()));
+        if (searchAutor) temp = temp.filter(l => l.autor.toLowerCase().includes(searchAutor.toLowerCase()));
+        if (filterCategoria) temp = temp.filter(l => l.categoria_id === filterCategoria);
+        if (filterStatus) temp = temp.filter(l => l.status.toLowerCase() === filterStatus.toLowerCase());
         setFilteredLivros(temp);
     }, [searchTitulo, searchAutor, filterCategoria, filterStatus, livros]);
 
@@ -65,7 +56,7 @@ export default function Livros() {
                 await updateLivro(id, data as UpdateLivroDTO);
                 toast.success("Livro atualizado com sucesso!");
             } else {
-                for(let i = 0; i < quantidade!; i++){
+                for (let i = 0; i < quantidade!; i++) {
                     await createLivro(data as CreateLivroDTO);
                 }
                 toast.success(`${quantidade} Livro(s) criado(s) com sucesso!`);
@@ -92,7 +83,7 @@ export default function Livros() {
     };
 
     const getCategoriaNome = (categoriaId: number) => {
-        const categoria = categorias.find((c) => c.id === categoriaId);
+        const categoria = categorias.find(c => c.id === categoriaId);
         return categoria ? categoria.nome : "Sem categoria";
     };
 
@@ -100,34 +91,33 @@ export default function Livros() {
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">Livros</h1>
 
+            {/* Filtros */}
             <div className="flex flex-col md:flex-row gap-2 mb-4">
                 <input
                     type="text"
                     placeholder="Buscar por título"
                     value={searchTitulo}
-                    onChange={(e) => setSearchTitulo(e.target.value)}
+                    onChange={e => setSearchTitulo(e.target.value)}
                     className="p-2 border border-gray-300 rounded w-full md:w-1/4"
                 />
                 <input
                     type="text"
                     placeholder="Buscar por autor"
                     value={searchAutor}
-                    onChange={(e) => setSearchAutor(e.target.value)}
+                    onChange={e => setSearchAutor(e.target.value)}
                     className="p-2 border border-gray-300 rounded w-full md:w-1/4"
                 />
                 <select
                     value={filterCategoria}
-                    onChange={(e) => setFilterCategoria(e.target.value ? Number(e.target.value) : "")}
+                    onChange={e => setFilterCategoria(e.target.value ? Number(e.target.value) : "")}
                     className="p-2 border border-gray-300 rounded w-full md:w-1/4"
                 >
                     <option value="">Todas as categorias</option>
-                    {categorias.map((cat) => (
-                        <option key={cat.id} value={cat.id}>{cat.nome}</option>
-                    ))}
+                    {categorias.map(cat => <option key={cat.id} value={cat.id}>{cat.nome}</option>)}
                 </select>
                 <select
                     value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
+                    onChange={e => setFilterStatus(e.target.value)}
                     className="p-2 border border-gray-300 rounded w-full md:w-1/4"
                 >
                     <option value="">Todos os status</option>
@@ -157,7 +147,7 @@ export default function Livros() {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredLivros.map((livro) => (
+                    {filteredLivros.map(livro => (
                         <tr key={livro.id} className="border-b border-gray-300 text-center">
                             <td className="p-2 border border-gray-300">{livro.id}</td>
                             <td className="p-2 border border-gray-300">{livro.titulo}</td>
@@ -167,11 +157,24 @@ export default function Livros() {
                             <td className="p-2 border border-gray-300">{livro.observacoes}</td>
                             <td className="p-2 border border-gray-300 flex justify-around">
                                 <button
+                                    onClick={() => {
+                                        setSelectedLivro(livro);
+                                        setIsEmprestimoModalOpen(true);
+                                    }}
+                                    className={`px-2 py-1 rounded text-white ${livro.status === "emprestado" ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}
+                                    disabled={livro.status === "emprestado"}
+                                    title={livro.status === "emprestado" ? "Livro já emprestado" : ""}
+                                >
+                                    Emprestar
+                                </button>
+
+                                <button
                                     onClick={() => { setSelectedLivro(livro); setIsFormModalOpen(true); }}
                                     className="px-2 py-1 bg-yellow-400 rounded"
                                 >
                                     Editar
                                 </button>
+
                                 <button
                                     onClick={() => { setLivroToDelete(livro); setIsConfirmModalOpen(true); }}
                                     className="px-2 py-1 bg-red-500 text-white rounded"
@@ -183,9 +186,7 @@ export default function Livros() {
                     ))}
                     {filteredLivros.length === 0 && (
                         <tr>
-                            <td colSpan={6} className="p-4 text-center text-gray-500">
-                                Nenhum livro encontrado.
-                            </td>
+                            <td colSpan={7} className="p-4 text-center text-gray-500">Nenhum livro encontrado.</td>
                         </tr>
                     )}
                 </tbody>
@@ -205,6 +206,17 @@ export default function Livros() {
                     message={`Deseja realmente deletar o livro "${livroToDelete.titulo}"?`}
                     onConfirm={handleDeleteLivro}
                     onCancel={() => setIsConfirmModalOpen(false)}
+                />
+            )}
+
+            {isEmprestimoModalOpen && selectedLivro && (
+                <FormEmprestimo
+                    livro={selectedLivro}
+                    onClose={() => setIsEmprestimoModalOpen(false)}
+                    onSave={() => {
+                        setIsEmprestimoModalOpen(false);
+                        loadData();
+                    }}
                 />
             )}
         </div>

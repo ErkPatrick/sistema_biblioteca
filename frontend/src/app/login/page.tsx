@@ -32,12 +32,11 @@ export default function LoginPage() {
       // Salvar no contexto
       login(data.usuario, data.token);
 
-      if (data.usuario.senha_provisoria === true) {
+      if (data.usuario.senha_provisoria) {
         router.push("/login/trocar-senha-provisoria");
       }
       else {
         toast.success(`${data.usuario.nome}, bem-vindo ao sistema!`)
-
         router.push("/home");
       }
     } catch (err: any) {

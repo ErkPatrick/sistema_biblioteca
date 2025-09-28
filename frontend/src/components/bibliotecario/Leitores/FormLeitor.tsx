@@ -96,6 +96,7 @@ export default function FormLeitor({ leitor, onClose, onSave }: FormLeitorProps)
                             value={cpf}
                             onAccept={(val: any) => setCpf(val)}
                             className="border p-3 rounded w-full"
+                            placeholder="000.000.000-00"
                             required
                         />
                     </div>
@@ -117,6 +118,7 @@ export default function FormLeitor({ leitor, onClose, onSave }: FormLeitorProps)
                             value={telefone}
                             onAccept={(val: any) => setTelefone(val)}
                             className="border p-3 rounded w-full"
+                            placeholder="(00)00000-0000"
                         />
                     </div>
 
@@ -127,6 +129,7 @@ export default function FormLeitor({ leitor, onClose, onSave }: FormLeitorProps)
                             value={cep}
                             onAccept={(val: any) => handleCepChange(val)}
                             className="border p-3 rounded w-full"
+                            placeholder="00000-000"
                         />
                     </div>
 

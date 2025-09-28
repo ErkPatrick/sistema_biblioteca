@@ -10,6 +10,16 @@ export const getLeitores = async (): Promise<Leitor[]> => {
   }
 };
 
+export const getLeitorByCPF = async (cpf: string): Promise<Leitor | null> => {
+  try {
+    const res = await api.get(`/leitores/cpf/${cpf}`);
+    return res.data;
+  } catch (err: any) {
+    throw new Error(err.response?.data?.error || "Erro ao buscar leitor pelo cpf informado");
+  }
+};
+
+
 export const createLeitor = async (leitor: CreateLeitorDTO): Promise<Leitor> => {
   try {
     const res = await api.post("/leitores", { leitor });
