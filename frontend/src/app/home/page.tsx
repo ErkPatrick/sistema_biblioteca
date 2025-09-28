@@ -5,8 +5,7 @@ import Sidebar from "@/components/ui/SideBar";
 import Livros from "@/components/bibliotecario/Livros/Livros";
 import Categorias from "@/components/bibliotecario/Categorias/Categorias";
 import Leitores from "@/components/bibliotecario/Leitores/Leitores";
-// import Emprestimos from "@/components/bibliotecario/Emprestimos";
-// import MinhasInfos from "@/components/bibliotecario/MinhasInfos";
+import Usuarios from "@/components/bibliotecario/Usuarios/Usuarios";
 
 export default function HomeBibliotecario() {
     const [activeComponent, setActiveComponent] = useState("livros");
@@ -21,10 +20,8 @@ export default function HomeBibliotecario() {
                 return <div>Componente Empréstimos</div>;
             case "leitores":
                 return <Leitores />;
-            case "minhasInfos":
-                return <div>Componente Minhas Informações</div>;
-            default:
-                return <div>Componente Livros</div>;
+            case "bibliotecarios":
+                return <Usuarios />
         }
     };
 

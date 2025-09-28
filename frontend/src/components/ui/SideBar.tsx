@@ -42,8 +42,8 @@ export default function Sidebar({ activeComponent, setActiveComponent }: Sidebar
         <FaUser /> Leitores
       </button>
 
-      <button className={buttonClass("minhasInfos")} onClick={() => setActiveComponent("minhasInfos")}>
-        <FaUser /> Minhas informações
+      <button className={buttonClass("bibliotecarios")} onClick={() => setActiveComponent("bibliotecarios")}>
+        <FaUser /> Usuários do Sistema
       </button>
 
       <button
