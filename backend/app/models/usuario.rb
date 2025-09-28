@@ -6,7 +6,6 @@ class Usuario < ApplicationRecord
 
   ROLES = %w[bibliotecario admin].freeze
 
-  # Validações
   validates :role, presence: true, inclusion: { in: ROLES }
   validates :nome, presence: true
 

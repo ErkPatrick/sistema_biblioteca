@@ -29,18 +29,18 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Configuração do Action Mailer para envio de emails
+  # Configuração do Action Mailer para Gmail
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: "smtp.office365.com",
+    address: "smtp.gmail.com",
     port: 587,
-    domain: "outlook.com",
-    user_name: ENV["OUTLOOK_EMAIL"],
-    password: ENV["OUTLOOK_PASSWORD"],
-    authentication: "login",
-    enable_starttls_auto: true
-    open_timeout: 30,
-    read_timeout: 30
+    domain: "gmail.com",
+    user_name: ENV["GMAIL_EMAIL"],
+    password: ENV["GMAIL_APP_PASSWORD"],
+    authentication: "plain",
+    enable_starttls_auto: true,
+    open_timeout: 60,
+    read_timeout: 60
   }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true

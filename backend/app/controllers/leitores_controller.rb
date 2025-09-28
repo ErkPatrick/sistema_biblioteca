@@ -21,7 +21,6 @@ class LeitoresController < ApplicationController
     end
   end
 
-
   def update
     if @leitor.update(leitor_params)
       render json: @leitor.as_json(include: :endereco)
@@ -33,6 +32,16 @@ class LeitoresController < ApplicationController
   def destroy
     @leitor.destroy
     head :no_content
+  end
+
+  def buscar_por_cpf
+    leitor = Leitor.find_by(cpf: params[:cpf])
+
+    if leitor
+      render json: leitor
+    else
+      render json: { error: "Leitor não encontrado" }, status: :not_found
+    end
   end
 
   private

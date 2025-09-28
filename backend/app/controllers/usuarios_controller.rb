@@ -1,23 +1,31 @@
 class UsuariosController < ApplicationController
-  before_action :authorize_admin!, only: [:index, :show]
+  # before_action :authorize_admin!, only: [:index, :show, :update, :destroy]
 
-  # GET /usuarios
   def index
     usuarios = Usuario.all
     render json: usuarios, status: :ok
   end
 
-  # GET /usuarios/:id
   def show
     usuario = Usuario.find(params[:id])
     render json: usuario, status: :ok
   end
 
-  # PUT /usuarios/:id/update_password
+  # Atualiza nome, email e role
+  def update
+    usuario = Usuario.find(params[:id])
+
+    if usuario.update(usuario_params)
+      render json: usuario, status: :ok
+    else
+      render json: { errors: usuario.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  # Só o próprio usuário pode alterar a senha
   def update_password
     usuario = Usuario.find(params[:id])
 
-    # Garante que só o próprio usuário pode alterar a senha
     unless usuario.id == current_usuario.id
       return render json: { error: "Acesso não autorizado" }, status: :forbidden
     end
@@ -29,16 +37,21 @@ class UsuariosController < ApplicationController
     end
   end
 
-  def destroy_user
+  def destroy
     usuario = Usuario.find(params[:id])
+
     if usuario.destroy
-      render json: { message: "Conta deletada com sucesso" }, status: :ok
+      render json: { message: "Usuário deletado com sucesso" }, status: :ok
     else
       render json: { errors: usuario.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   private
+
+  def usuario_params
+    params.require(:usuario).permit(:nome, :email, :role)
+  end
 
   def password_params
     params.require(:usuario).permit(:password, :password_confirmation)

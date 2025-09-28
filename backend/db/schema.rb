@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_27_165506) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_28_183534) do
   create_table "categorias", force: :cascade do |t|
     t.string "nome", null: false
     t.datetime "created_at", null: false
@@ -24,11 +24,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_27_165506) do
     t.integer "leitor_id", null: false
     t.string "status", default: "emprestado", null: false
     t.date "data_emprestimo", null: false
-    t.date "data_devolucao"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "data_devolucao_prevista", null: false
     t.date "data_devolucao_real"
+    t.decimal "valor_multa"
+    t.boolean "renovado", default: false, null: false
     t.index ["leitor_id"], name: "index_emprestimos_on_leitor_id"
     t.index ["livro_id"], name: "index_emprestimos_on_livro_id"
     t.index ["usuario_id"], name: "index_emprestimos_on_usuario_id"
