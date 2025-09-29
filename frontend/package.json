@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NEXT_PRIVATE_USE_TURBOPACK=false next dev -p 3001",
     "build": "next build --turbopack",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "eslint"
   },
   "dependencies": {

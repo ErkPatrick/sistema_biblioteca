@@ -28,6 +28,8 @@ export const updateUsuario = async (id: number, usuario: UpdateUsuarioDTO): Prom
     }
 };
 
+
+
 export const deleteUsuario = async (id: number): Promise<void> => {
     try {
         await api.delete(`/usuarios/${id}`);

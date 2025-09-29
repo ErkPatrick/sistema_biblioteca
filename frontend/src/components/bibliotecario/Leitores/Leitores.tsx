@@ -140,7 +140,7 @@ export default function LeitoresPage() {
               <td className="p-2 border border-gray-300">
                 {`${l.endereco.rua}, ${l.endereco.numero} - ${l.endereco.cidade}/${l.endereco.estado} - CEP: ${l.endereco.cep}`}
               </td>
-              <td className="p-2 border border-gray-300 flex justify-around">
+              <td className="p-2 border border-gray-300 flex justify-around gap-2">
                 <button
                   onClick={() => { setSelectedLeitor(l); setIsFormModalOpen(true); }}
                   className="px-2 py-1 bg-yellow-400 rounded"

@@ -7,6 +7,7 @@ import {
     UpdatePasswordRequest,
     UpdatePasswordResponse
 } from "@/models/auth";
+import { ForgotPasswordDTO } from "@/models/auth";
 
 export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
     try {
@@ -36,5 +37,13 @@ export const updatePassword = async (
         return response.data;
     } catch (err: any) {
         throw new Error(err.response?.data?.error || "Erro ao atualizar a senha");
+    }
+};
+
+export const forgotPassword = async (data: ForgotPasswordDTO): Promise<void> => {
+    try {
+        await api.post("/usuarios/recuperar_senha", { usuario: { email: data.email }});
+    } catch (err: any) {
+        throw new Error(err.response?.data?.errors?.[0] || "Erro ao enviar instruções de recuperação");
     }
 };

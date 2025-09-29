@@ -18,3 +18,5 @@ export interface UpdateUsuarioDTO {
   email?: string;
   role?: "bibliotecario" | "admin";
 }
+
+

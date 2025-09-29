@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LoginRequest, LoginResponse } from "@/models/auth";
+import { LoginRequest } from "@/models/auth";
 import { useAuth } from "@/context/AuthContext";
-import Link from "next/link";
 import { toast } from "sonner";
-import { loginUser } from "@/services/authServices";
+import { loginUser, forgotPassword } from "@/services/authServices";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,11 +14,11 @@ export default function LoginPage() {
   const [form, setForm] = useState<LoginRequest>({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
 
-  //limpo o contexto de login ao entrar nessa parte
   useEffect(() => {
-    logout()
-  }, [])
+    logout();
+  }, []);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -28,21 +27,35 @@ export default function LoginPage() {
 
     try {
       const data = await loginUser(form);
-
-      // Salvar no contexto
       login(data.usuario, data.token);
 
       if (data.usuario.senha_provisoria) {
         router.push("/login/trocar-senha-provisoria");
-      }
-      else {
-        toast.success(`${data.usuario.nome}, bem-vindo ao sistema!`)
+      } else {
+        toast.success(`${data.usuario.nome}, bem-vindo ao sistema!`);
         router.push("/home");
       }
     } catch (err: any) {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleForgotPassword() {
+    if (!form.email) {
+      toast.error("Informe seu email para recuperar a senha");
+      return;
+    }
+
+    setForgotLoading(true);
+    try {
+      await forgotPassword({ email: form.email });
+      toast.success("Instruções de recuperação enviadas para seu email");
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setForgotLoading(false);
     }
   }
 
@@ -80,9 +93,16 @@ export default function LoginPage() {
           {loading ? "Entrando..." : "Entrar"}
         </button>
 
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        <button
+          type="button"
+          onClick={handleForgotPassword}
+          disabled={forgotLoading}
+          className="text-blue-500 mt-2 underline text-center hover:cursor-pointer"
+        >
+          {forgotLoading ? "Enviando..." : "Esqueci minha senha"}
+        </button>
 
-        <Link className="flex justify-center text-blue-500 hover:underline" href={"/registrar"}>Não tem uma conta?</Link>
+        {error && <p className="text-red-500 text-center">{error}</p>}
       </form>
     </div>
   );
