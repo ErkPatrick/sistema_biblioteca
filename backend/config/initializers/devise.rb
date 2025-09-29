@@ -3,7 +3,8 @@
 Devise.setup do |config|
   require 'devise/orm/active_record'
 
-  config.mailer_sender = 'erick-patrickfreitas@outlook.com'
+  config.mailer_sender = 'erick.patrickfreitas@gmail.com'
+  config.mailer = 'UsuarioMailer'
 
   config.case_insensitive_keys = [:email]
   config.strip_whitespace_keys = [:email]
@@ -21,7 +22,7 @@ Devise.setup do |config|
   config.responder.redirect_status = :see_other
 
   config.jwt do |jwt|
-    jwt.secret = 'uma_chave_secreta_long'
+    jwt.secret = ENV["TOKEN_SECRET"]
     jwt.dispatch_requests = [['POST', %r{^/login$}]]
     jwt.revocation_requests = [['DELETE', %r{^/logout$}]]
     jwt.expiration_time = 1.day.to_i
