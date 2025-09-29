@@ -10,6 +10,7 @@ export interface Emprestimo {
   valor_multa?: number;
   livro: { titulo: string };
   leitor: { nome_completo: string };
+  renovado: boolean;
 }
 
 

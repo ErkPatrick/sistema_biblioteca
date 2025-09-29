@@ -6,6 +6,7 @@ import { getLeitores, createLeitor, updateLeitor, deleteLeitor } from "@/service
 import FormLeitor from "./FormLeitor";
 import { toast } from "sonner";
 import ConfirmModal from "../../ConfirmModal";
+import IMask from "imask";
 
 export default function LeitoresPage() {
   const [leitores, setLeitores] = useState<Leitor[]>([]);
@@ -13,6 +14,10 @@ export default function LeitoresPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [leitorToDelete, setLeitorToDelete] = useState<Leitor | null>(null);
+
+  // Filtros
+  const [filtroNome, setFiltroNome] = useState("");
+  const [filtroCPF, setFiltroCPF] = useState("");
 
   const loadLeitores = async () => {
     try {
@@ -57,15 +62,62 @@ export default function LeitoresPage() {
     }
   };
 
+  const leitoresFiltrados = leitores.filter((l) => {
+    const nomeMatch = l.nome_completo.toLowerCase().includes(filtroNome.toLowerCase());
+    const cpfMatch = l.cpf.includes(filtroCPF);
+    return nomeMatch && cpfMatch;
+  });
+
+  const resetarFiltros = () => {
+    setFiltroNome("");
+    setFiltroCPF("");
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Leitores</h1>
-      <button
-        onClick={() => setIsFormModalOpen(true)}
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Adicionar Leitor
-      </button>
+      
+      {/* Filtros */}
+      <div className="flex gap-4 mb-4">
+        <div>
+          <input
+            type="text"
+            value={filtroNome}
+            onChange={(e) => setFiltroNome(e.target.value)}
+            className="border p-1 rounded"
+            placeholder="Buscar por Nome"
+          />
+        </div>
+
+        <div>
+          <input
+            ref={(el) => {
+              if (el) {
+                IMask(el, { mask: "000.000.000-00" });
+              }
+            }}
+            value={filtroCPF}
+            onChange={(e) => setFiltroCPF(e.target.value)}
+            className="border p-1 rounded"
+            placeholder="Buscar por CPF"
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-between">
+        <button
+          onClick={() => setIsFormModalOpen(true)}
+          className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Adicionar Leitor
+        </button>
+        <button
+          onClick={resetarFiltros}
+          className="mb-4 px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-700"
+        >
+          Resetar filtros
+        </button>
+      </div>
 
       <table className="w-full border border-gray-300 border-collapse">
         <thead>
@@ -79,7 +131,7 @@ export default function LeitoresPage() {
           </tr>
         </thead>
         <tbody>
-          {leitores.map((l) => (
+          {leitoresFiltrados.map((l) => (
             <tr key={l.id} className="border-b border-gray-300 text-center">
               <td className="p-2 border border-gray-300">{l.nome_completo}</td>
               <td className="p-2 border border-gray-300">{l.cpf}</td>

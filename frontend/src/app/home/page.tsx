@@ -7,9 +7,12 @@ import LivrosPage from "@/components/bibliotecario/Livros/Livros";
 import CategoriasPage from "@/components/bibliotecario/Categorias/Categorias";
 import LeitoresPage from "@/components/bibliotecario/Leitores/Leitores";
 import UsuariosPage from "@/components/bibliotecario/Usuarios/Usuarios";
+import AuthGuard from "@/components/AuthGuard";
+import { useAuth } from "@/context/AuthContext";
 
 export default function HomeBibliotecario() {
     const [activeComponent, setActiveComponent] = useState("livros");
+    const usuario = useAuth();
 
     const renderComponent = () => {
         switch (activeComponent) {
@@ -27,14 +30,16 @@ export default function HomeBibliotecario() {
     };
 
     return (
-        <div className="flex h-screen w-screen">
-            <Sidebar
-                activeComponent={activeComponent}
-                setActiveComponent={setActiveComponent}
-            />
-            <main className="flex-1 ml-64 overflow-auto p-6 bg-gray-100">
-                {renderComponent()}
-            </main>
-        </div>
+        <AuthGuard>
+            <div className="flex h-screen w-screen">
+                <Sidebar
+                    activeComponent={activeComponent}
+                    setActiveComponent={setActiveComponent}
+                />
+                <main className="flex-1 ml-64 overflow-auto p-6 bg-gray-100">
+                    {renderComponent()}
+                </main>
+            </div>
+        </AuthGuard>
     );
 }

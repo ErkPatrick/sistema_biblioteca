@@ -44,3 +44,12 @@ export const devolverEmprestimo = async (id: number, senha: string): Promise<Emp
     throw new Error(err.response?.data?.error || "Erro ao devolver empréstimo");
   }
 };
+
+export const marcarPerdidoDanificado = async (id: number, senha: string): Promise<Emprestimo> => {
+  try {
+    const res = await api.post(`/emprestimos/${id}/marcar_perdido_danificado`, { senha_emprestimo: senha });
+    return res.data;
+  } catch (err: any) {
+    throw new Error(err.response?.data?.error || "Erro ao marcar empréstimo como perdido/danificado");
+  }
+};

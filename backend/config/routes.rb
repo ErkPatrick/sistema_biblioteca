@@ -27,15 +27,14 @@ Rails.application.routes.draw do
 
   resources :emprestimos do
     member do
-      put :renovar
-      put :devolver
+      post :renovar
+      post :devolver
+      post :marcar_perdido_danificado
     end
   end
 
   # Outros controllers da aplicação
   resources :livros
-  resources :emprestimos
   resources :categorias
-  resources :leitores
   delete "/usuarios/:id", to: "usuarios#destroy_user"
 end

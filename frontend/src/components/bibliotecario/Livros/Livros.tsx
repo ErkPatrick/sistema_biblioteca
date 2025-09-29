@@ -87,6 +87,13 @@ export default function LivrosPage() {
         return categoria ? categoria.nome : "Sem categoria";
     };
 
+    const resetarFiltros = () => {
+        setSearchTitulo("");
+        setSearchAutor("");
+        setFilterCategoria("");
+        setFilterStatus("");
+    };
+
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">Livros</h1>
@@ -126,13 +133,21 @@ export default function LivrosPage() {
                     <option value="danificado/perdido">Danificado/Perdido</option>
                 </select>
             </div>
+            <div className="flex justify-between">
+                <button
+                    onClick={() => setIsFormModalOpen(true)}
+                    className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    Adicionar Livro
+                </button>
 
-            <button
-                onClick={() => setIsFormModalOpen(true)}
-                className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-                Adicionar Livro
-            </button>
+                <button
+                    onClick={resetarFiltros}
+                    className="mb-4 px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-700"
+                >
+                    Resetar filtros
+                </button>
+            </div>
 
             <table className="w-full border border-gray-300 border-collapse">
                 <thead>

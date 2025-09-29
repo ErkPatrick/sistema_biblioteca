@@ -1,5 +1,5 @@
 class EmprestimosController < ApplicationController
-  before_action :set_emprestimo, only: [ :show, :update, :destroy, :renovar, :devolver ]
+  before_action :set_emprestimo, only: [ :show, :update, :destroy, :renovar, :devolver, :marcar_perdido_danificado ]
 
 def index
   emprestimos = Emprestimo.includes(:livro, :leitor).all
@@ -105,6 +105,32 @@ end
 
     # Atualiza status do livro
     @emprestimo.livro.update(status: "disponível")
+
+    if @emprestimo.save
+      render json: @emprestimo
+    else
+      render json: { errors: @emprestimo.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def marcar_perdido_danificado
+    if @emprestimo.data_devolucao_real.present?
+      render json: { error: "Não é possível marcar um empréstimo já devolvido como perdido" }, status: :unprocessable_entity
+      return
+    end
+
+    # validação da senha de empréstimo do leitor
+    if params[:senha_emprestimo].blank? || @emprestimo.leitor.senha_emprestimo != params[:senha_emprestimo]
+      render json: { error: "Senha de empréstimo inválida" }, status: :unprocessable_entity
+      return
+    end
+
+    @emprestimo.data_devolucao_real = Date.today
+    @emprestimo.status = "perdido/danificado"
+    @emprestimo.valor_multa = 50
+
+    # Atualiza status do livro
+    @emprestimo.livro.update(status: "perdido/danificado")
 
     if @emprestimo.save
       render json: @emprestimo

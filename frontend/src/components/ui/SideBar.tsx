@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 interface SidebarProps {
   activeComponent: string;
   setActiveComponent: (comp: string) => void;
+  role: string;
 }
 
-export default function Sidebar({ activeComponent, setActiveComponent }: SidebarProps) {
+export default function Sidebar({ activeComponent, setActiveComponent, role }: SidebarProps) {
   const router = useRouter();
 
   const handleLogout = () => {
