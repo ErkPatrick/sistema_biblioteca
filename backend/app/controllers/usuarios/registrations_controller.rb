@@ -1,7 +1,9 @@
 class Usuarios::RegistrationsController < Devise::RegistrationsController
   respond_to :json
 
-  skip_before_action :authenticate_usuario!
+  # Somente admins podem criar novos usuários
+  before_action :authenticate_usuario!
+  before_action :authorize_admin!, only: [:create]
   before_action :configure_permitted_parameters, only: [:create]
 
   private
@@ -9,7 +11,7 @@ class Usuarios::RegistrationsController < Devise::RegistrationsController
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(
       :sign_up,
-      keys: [:nome, :email, :password, :password_confirmation]
+      keys: [:nome, :email, :password, :password_confirmation, :role] # role pode ser setada pelo admin
     )
   end
 

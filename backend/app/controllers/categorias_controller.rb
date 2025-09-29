@@ -1,12 +1,14 @@
 class CategoriasController < ApplicationController
+  before_action :authorize_admin!, only: [:create, :update, :destroy]
+  before_action :set_categoria, only: [:show, :update, :destroy]
+
   def index
     categorias = Categoria.all
     render json: categorias
   end
 
   def show
-    categoria = Categoria.find(params[:id])
-    render json: categoria
+    render json: @categoria
   end
 
   def create
@@ -19,21 +21,23 @@ class CategoriasController < ApplicationController
   end
 
   def update
-    categoria = Categoria.find(params[:id])
-    if categoria.update(categoria_params)
-      render json: categoria
+    if @categoria.update(categoria_params)
+      render json: @categoria
     else
-      render json: categoria.errors, status: :unprocessable_entity
+      render json: @categoria.errors, status: :unprocessable_entity
     end
   end
 
   def destroy
-    categoria = Categoria.find(params[:id])
-    categoria.destroy
+    @categoria.destroy
     head :no_content
   end
 
   private
+
+  def set_categoria
+    @categoria = Categoria.find(params[:id])
+  end
 
   def categoria_params
     params.require(:categoria).permit(:nome)

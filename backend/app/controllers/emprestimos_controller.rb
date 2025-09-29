@@ -1,5 +1,6 @@
 class EmprestimosController < ApplicationController
   before_action :set_emprestimo, only: [ :show, :update, :destroy, :renovar, :devolver, :marcar_perdido_danificado ]
+  before_action :authorize_admin!, only: [:destroy] 
 
 def index
   emprestimos = Emprestimo.includes(:livro, :leitor).all
