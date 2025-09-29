@@ -12,16 +12,16 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function HomeBibliotecario() {
     const [activeComponent, setActiveComponent] = useState("livros");
-    const usuario = useAuth();
+    const { usuario } = useAuth();
 
     const renderComponent = () => {
         switch (activeComponent) {
             case "livros":
-                return <LivrosPage />;
+                return <LivrosPage role={usuario?.role || ""}/>;
             case "categorias":
-                return <CategoriasPage />;
+                return <CategoriasPage role={usuario?.role || ""}/>;
             case "emprestimos":
-                return <EmprestimosPage/>
+                return <EmprestimosPage role={usuario?.role || ""}/>
             case "leitores":
                 return <LeitoresPage />;
             case "bibliotecarios":
@@ -35,6 +35,7 @@ export default function HomeBibliotecario() {
                 <Sidebar
                     activeComponent={activeComponent}
                     setActiveComponent={setActiveComponent}
+                    role={usuario?.role || ""} 
                 />
                 <main className="flex-1 ml-64 overflow-auto p-6 bg-gray-100">
                     {renderComponent()}

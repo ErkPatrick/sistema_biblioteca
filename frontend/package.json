@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NEXT_PRIVATE_USE_TURBOPACK=false next dev -p 3001",
+    "dev": "cross-env NEXT_PRIVATE_USE_TURBOPACK=false next dev -p 3001",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint"
@@ -24,6 +24,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-input-mask": "^3.0.6",
+    "cross-env": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
     "tailwindcss": "^4",

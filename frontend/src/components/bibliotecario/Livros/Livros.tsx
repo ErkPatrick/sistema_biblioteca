@@ -10,7 +10,11 @@ import FormEmprestimo from "./FormEmprestimo";
 import { toast } from "sonner";
 import ConfirmModal from "../../ConfirmModal";
 
-export default function LivrosPage() {
+interface LivrosPageProps {
+    role: string;
+}
+
+export default function LivrosPage({ role }: LivrosPageProps) {
     const [livros, setLivros] = useState<Livro[]>([]);
     const [filteredLivros, setFilteredLivros] = useState<Livro[]>([]);
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -134,12 +138,14 @@ export default function LivrosPage() {
                 </select>
             </div>
             <div className="flex justify-between">
-                <button
-                    onClick={() => setIsFormModalOpen(true)}
-                    className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                    Adicionar Livro
-                </button>
+                {role === "admin" &&
+                    <button
+                        onClick={() => setIsFormModalOpen(true)}
+                        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                        Adicionar Livro
+                    </button>
+                }
 
                 <button
                     onClick={resetarFiltros}
@@ -176,26 +182,28 @@ export default function LivrosPage() {
                                         setSelectedLivro(livro);
                                         setIsEmprestimoModalOpen(true);
                                     }}
-                                    className={`px-2 py-1 rounded text-white ${livro.status === "emprestado" ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}
-                                    disabled={livro.status === "emprestado"}
+                                    className={`px-2 py-1 rounded text-white ${livro.status === "emprestado" || livro.status === "perdido/danificado" ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}
+                                    disabled={livro.status === "emprestado" || livro.status === "perdido/danificado"}
                                     title={livro.status === "emprestado" ? "Livro já emprestado" : ""}
                                 >
                                     Emprestar
                                 </button>
-
+                                {role === "admin" &&
                                 <button
                                     onClick={() => { setSelectedLivro(livro); setIsFormModalOpen(true); }}
                                     className="px-2 py-1 bg-yellow-400 rounded"
                                 >
                                     Editar
                                 </button>
-
+                                }   
+                                { role === "admin" &&
                                 <button
                                     onClick={() => { setLivroToDelete(livro); setIsConfirmModalOpen(true); }}
                                     className="px-2 py-1 bg-red-500 text-white rounded"
                                 >
                                     Deletar
                                 </button>
+                                }
                             </td>
                         </tr>
                     ))}

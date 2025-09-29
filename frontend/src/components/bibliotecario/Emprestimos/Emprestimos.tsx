@@ -11,7 +11,11 @@ import { toast } from "sonner";
 import ConfirmModal from "@/components/ConfirmModal";
 import SenhaEmprestimoModal from "./SenhaEmprestimoModal";
 
-export default function EmprestimosPage() {
+interface EmprestimoPageProps {
+    role: string;
+}
+
+export default function EmprestimosPage({ role }: EmprestimoPageProps) {
     const [emprestimos, setEmprestimos] = useState<Emprestimo[]>([]);
     const [loading, setLoading] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -300,13 +304,14 @@ export default function EmprestimosPage() {
                                     >
                                         Perdido/Danificado
                                     </button>
-
-                                    <button
-                                        onClick={() => handleDelete(e.id)}
-                                        className="px-2 py-1 rounded text-white bg-red-500 hover:bg-red-600"
-                                    >
-                                        Excluir
-                                    </button>
+                                    {role === "admin" &&
+                                        <button
+                                            onClick={() => handleDelete(e.id)}
+                                            className="px-2 py-1 rounded text-white bg-red-500 hover:bg-red-600"
+                                        >
+                                            Excluir
+                                        </button>
+                                    }
                                 </div>
                             </td>
                         </tr>

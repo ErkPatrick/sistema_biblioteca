@@ -7,7 +7,11 @@ import FormCategoria from "./FormCategoria";
 import { toast } from "sonner";
 import ConfirmModal from "../../ConfirmModal";
 
-export default function CategoriasPage() {
+interface CategoriasPageProps {
+    role: string;
+}
+
+export default function CategoriasPage({ role }: CategoriasPageProps) {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [filteredCategorias, setFilteredCategorias] = useState<Categoria[]>([]);
     const [selectedCategoria, setSelectedCategoria] = useState<Categoria | null>(null);
@@ -80,39 +84,44 @@ export default function CategoriasPage() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="mb-4 p-2 border border-gray-300 rounded w-full"
             />
-
-            <button
-                onClick={() => setIsFormModalOpen(true)}
-                className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-                Adicionar Categoria
-            </button>
+            {role === "admin" &&
+                <button
+                    onClick={() => setIsFormModalOpen(true)}
+                    className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    Adicionar Categoria
+                </button>
+            }
 
             <table className="w-full border border-gray-300 border-collapse">
                 <thead>
                     <tr className="bg-gray-200">
                         <th className="p-2 border border-gray-300 w-3/4">Nome</th>
-                        <th className="p-2 border border-gray-300">Ações</th>
+                        {role === "admin" &&
+                            <th className="p-2 border border-gray-300">Ações</th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
                     {filteredCategorias.map((cat) => (
                         <tr key={cat.id} className="border-b border-gray-300 text-center">
                             <td className="p-2 border border-gray-300">{cat.nome}</td>
-                            <td className="p-2 border border-gray-300 flex justify-center gap-2">
-                                <button
-                                    onClick={() => { setSelectedCategoria(cat); setIsFormModalOpen(true); }}
-                                    className="px-2 py-1 bg-yellow-400 rounded"
-                                >
-                                    Editar
-                                </button>
-                                <button
-                                    onClick={() => { setCategoriaToDelete(cat); setIsConfirmModalOpen(true); }}
-                                    className="px-2 py-1 bg-red-500 text-white rounded"
-                                >
-                                    Deletar
-                                </button>
-                            </td>
+                            {role === "admin" &&
+                                <td className="p-2 border border-gray-300 flex justify-center gap-2">
+                                    <button
+                                        onClick={() => { setSelectedCategoria(cat); setIsFormModalOpen(true); }}
+                                        className="px-2 py-1 bg-yellow-400 rounded"
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        onClick={() => { setCategoriaToDelete(cat); setIsConfirmModalOpen(true); }}
+                                        className="px-2 py-1 bg-red-500 text-white rounded"
+                                    >
+                                        Deletar
+                                    </button>
+                                </td>
+                            }
                         </tr>
                     ))}
                     {filteredCategorias.length === 0 && (

@@ -18,8 +18,7 @@ export default function Sidebar({ activeComponent, setActiveComponent, role }: S
 
   // Função para aplicar a classe de ativo
   const buttonClass = (comp: string) =>
-    `flex items-center gap-2 p-2 rounded hover:bg-gray-700 ${
-      activeComponent === comp ? "bg-gray-700 font-bold" : ""
+    `flex items-center gap-2 p-2 rounded hover:bg-gray-700 ${activeComponent === comp ? "bg-gray-700 font-bold" : ""
     }`;
 
   return (
@@ -42,10 +41,11 @@ export default function Sidebar({ activeComponent, setActiveComponent, role }: S
       <button className={buttonClass("leitores")} onClick={() => setActiveComponent("leitores")}>
         <FaUser /> Leitores
       </button>
-
-      <button className={buttonClass("bibliotecarios")} onClick={() => setActiveComponent("bibliotecarios")}>
-        <FaUser /> Usuários do Sistema
-      </button>
+      {role === "admin" &&
+        <button className={buttonClass("bibliotecarios")} onClick={() => setActiveComponent("bibliotecarios")}>
+          <FaUser /> Usuários do Sistema
+        </button>
+      }
 
       <button
         className="flex items-center gap-2 hover:bg-gray-700 p-2 rounded mt-auto"
