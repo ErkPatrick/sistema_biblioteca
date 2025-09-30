@@ -3,7 +3,6 @@ class Usuarios::RegistrationsController < Devise::RegistrationsController
 
   # Somente admins podem criar novos usuários
   before_action :authenticate_usuario!
-  before_action :authorize_admin!, only: [:create]
   before_action :configure_permitted_parameters, only: [:create]
 
   private
