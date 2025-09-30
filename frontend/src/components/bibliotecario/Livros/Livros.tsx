@@ -134,7 +134,7 @@ export default function LivrosPage({ role }: LivrosPageProps) {
                     <option value="">Todos os status</option>
                     <option value="disponível">Disponível</option>
                     <option value="emprestado">Emprestado</option>
-                    <option value="danificado/perdido">Danificado/Perdido</option>
+                    <option value="perdido/danificado">Perdido/Danificado</option>
                 </select>
             </div>
             <div className="flex justify-between">

@@ -10,6 +10,8 @@ import {
 import { toast } from "sonner";
 import ConfirmModal from "@/components/ConfirmModal";
 import SenhaEmprestimoModal from "./SenhaEmprestimoModal";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface EmprestimoPageProps {
     role: string;
@@ -147,6 +149,45 @@ export default function EmprestimosPage({ role }: EmprestimoPageProps) {
         return leitorMatch && livroMatch && statusMatch && multaMatch && dataMatch;
     });
 
+    const gerarPDF = () => {
+        const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text("Relatório de Empréstimos", 14, 22);
+
+        const colunas = [
+            "ID",
+            "Livro",
+            "Leitor",
+            "Status",
+            "Data Empréstimo",
+            "Devolução Prevista",
+            "Devolução Real",
+            "Valor Multa"
+        ];
+
+        const dados = emprestimosFiltrados.map((e) => [
+            e.id,
+            e.livro.titulo,
+            e.leitor.nome_completo,
+            e.status,
+            new Date(e.data_emprestimo).toLocaleDateString(),
+            new Date(e.data_devolucao_prevista).toLocaleDateString(),
+            e.data_devolucao_real ? new Date(e.data_devolucao_real).toLocaleDateString() : "-",
+            e.valor_multa ?? 0
+        ]);
+
+        autoTable(doc, { 
+            head: [colunas],
+            body: dados,
+            startY: 30,
+            styles: { fontSize: 10 },
+            headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+        });
+
+        doc.save("emprestimos.pdf");
+    };
+
     const resetarFiltros = () => {
         setFiltroLeitor("");
         setFiltroLivro("");
@@ -221,12 +262,20 @@ export default function EmprestimosPage({ role }: EmprestimoPageProps) {
                     <option value="nao">Sem multa</option>
                 </select>
             </div>
-            <button
-                onClick={resetarFiltros}
-                className="mb-4 px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-700"
-            >
-                Resetar filtros
-            </button>
+            <div className="flex justify-between">
+                <button
+                    onClick={resetarFiltros}
+                    className="mb-4 px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-700"
+                >
+                    Resetar filtros
+                </button>
+                <button
+                    onClick={gerarPDF}
+                    className="mb-4 ml-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                    Exportar PDF
+                </button>
+            </div>
 
             <table className="w-full border-collapse border border-gray-300">
                 <thead>

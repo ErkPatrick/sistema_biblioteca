@@ -23,7 +23,12 @@ export default function Sidebar({ activeComponent, setActiveComponent, role }: S
 
   return (
     <aside className="w-64 h-screen bg-gray-800 text-white fixed flex flex-col p-4 gap-4">
-      <h1 className="text-center text-xl font-bold">Bibliotecário</h1>
+      {role === "admin" &&
+        <h1 className="text-center text-xl font-bold">Administrador</h1>
+      }
+      {role === "bibliotecario" &&
+        <h1 className="text-center text-xl font-bold">Bibliotecário</h1>
+      }
       <hr className="mb-4" />
 
       <button className={buttonClass("livros")} onClick={() => setActiveComponent("livros")}>
