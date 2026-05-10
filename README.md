@@ -41,8 +41,8 @@ cd sistema_biblioteca
 ```bash
 cd backend
 bundle install
-bin/rails db:create db:migrate
-bin/rails server
+rails db:create db:migrate
+rails server
 ```
 
 Disponível em **http://localhost:3000**
