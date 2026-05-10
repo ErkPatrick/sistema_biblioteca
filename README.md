@@ -1,25 +1,20 @@
 # 📚 Sistema de Biblioteca Municipal
 
-Sistema web para gerenciamento do acervo e empréstimos de livros em uma biblioteca. O projeto substitui o controle manual em
-registros físicos por uma plataforma digital completa, com autenticação, controle de empréstimos, cálculo de multas e relatórios.
+Sistema web para gerenciamento do acervo e empréstimos de livros em uma biblioteca. O projeto substitui o controle manual em registros físicos por uma plataforma digital completa, com autenticação, controle de empréstimos, cálculo de multas e relatórios.
 
 ## ✨ Funcionalidades
 
-- **Autenticação** — cadastro de bibliotecários com senha criptografada, login,
-  recuperação de senha por e-mail e redefinição obrigatória no primeiro acesso
-- **Acervo** — cadastro e gerenciamento de livros por categoria, com controle de
-  status (disponível / emprestado)
-- **Usuários** — cadastro de usuários da biblioteca com geração automática de
-  senha de empréstimo enviada por e-mail
-- **Empréstimos** — fluxo completo de empréstimo com verificação de disponibilidade,
-  confirmação por senha do usuário e cálculo automático de prazo (15 dias úteis)
+- **Autenticação** — cadastro de bibliotecários com senha criptografada, login, recuperação de senha por e-mail e redefinição obrigatória no primeiro acesso
+- **Acervo** — cadastro e gerenciamento de livros por categoria, com controle de status (disponível / emprestado)
+- **Usuários** — cadastro de usuários da biblioteca com geração automática de senha de empréstimo enviada por e-mail
+- **Empréstimos** — fluxo completo de empréstimo com verificação de disponibilidade, confirmação por senha do usuário e cálculo automático de prazo (15 dias úteis)
 - **Relatório de livros em atraso**
 - **Histórico de empréstimos por usuário**
 - **Cálculo automático de multas por atraso**
 
 ## 🛠️ Tecnologias
 
-- **Backend:** Ruby on Rails 8, PostgreSQL
+- **Backend:** Ruby on Rails 8, SQLite (desenvolvimento)
 - **Frontend:** Next.js, React
 
 ## 🚀 Requisitos
@@ -32,7 +27,7 @@ registros físicos por uma plataforma digital completa, com autenticação, cont
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/sistema_biblioteca.git
+git clone https://github.com/ErkPatrick/sistema_biblioteca.git
 cd sistema_biblioteca
 ```
 
@@ -41,7 +36,29 @@ cd sistema_biblioteca
 ```bash
 cd backend
 bundle install
-rails db:create db:migrate
+```
+
+Configure as variáveis de ambiente:
+
+```bash
+cp .env.example .env
+```
+
+Edite o `.env` e preencha com sua chave secreta (gere com `rails secret`):
+
+```
+TOKEN_SECRET=sua_chave_secreta_aqui
+```
+
+Crie o banco, rode as migrations e a seed:
+
+```bash
+rails db:create db:migrate db:seed
+```
+
+Inicie o servidor:
+
+```bash
 rails server
 ```
 
@@ -58,3 +75,12 @@ npm run dev
 ```
 
 Disponível em **http://localhost:3001**
+
+## 🔑 Acesso para demonstração
+
+Após rodar o `db:seed`, o sistema estará configurado com:
+
+| Campo | Valor |
+|---|---|
+| E-mail | admin@biblioteca.com |
+| Senha | password123 |
